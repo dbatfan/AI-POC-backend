@@ -1,0 +1,40 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import uvicorn
+
+
+app = FastAPI()
+
+#CORS setting
+origins = ["*"] #Allow all origins (can be modified to restrict Access)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+#Input request model
+class InputRequest(BaseModel):
+    question: str
+
+
+class OutputResponse(BaseModel):
+    answer: str
+
+
+#post endpoint:
+@app.post(path="/ask", response_model=OutputResponse)
+def answer_question(request: InputRequest):
+    question=request.question
+    answer="here is a generic answer."
+    return {"answer": answer}
+
+
+#only runs if you do: python main.py
+if __name__ == "__main__":
+    uvicorn.run("main:app",host="127.0.0.1",port=8000,reload=True)

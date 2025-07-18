@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
+from get_llm_response import get_answer
 
 
 app = FastAPI()
@@ -31,7 +32,7 @@ class OutputResponse(BaseModel):
 @app.post(path="/ask", response_model=OutputResponse)
 def answer_question(request: InputRequest):
     question=request.question
-    answer="here is a generic answer."
+    answer=get_answer(question)
     return {"answer": answer}
 
 
